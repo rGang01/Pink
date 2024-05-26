@@ -82,7 +82,7 @@ void Insert_TBT(struct node**ppHead,int iNo)
 
         else
         {
-           return;
+           break;
         }
     }
 
