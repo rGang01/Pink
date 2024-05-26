@@ -1,4 +1,4 @@
-// //Without replacement
+// //Without replacement   11 33 20 88 79 98 44 68 66 22
 
 // #include <stdio.h>
 
@@ -75,7 +75,7 @@
 // }
 
 
-// with replacement
+// with replacement  11 33 20 88 79 98 44 68 66 22
 
 #include <stdio.h>
 
