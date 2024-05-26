@@ -14,7 +14,7 @@ void InOrder(struct node *pHead);
 void PreOrder(struct node *pHead);
 void Insert_TBT(struct node**ppHead,int iNo);
 
-int main(void)
+void main()
 {
     struct node*pHead = NULL;
 
@@ -37,7 +37,7 @@ int main(void)
     Insert_TBT(&pHead,20);
     Insert_TBT(&pHead,1);
 
-    Inorder(pHead);
+    InOrder(pHead);
 }
 
 void Insert_TBT(struct node**ppHead,int iNo)
