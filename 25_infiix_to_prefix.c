@@ -106,25 +106,32 @@ void infixToPrefix(char* infix, char* prefix) {
     int k = 0;
     for (int i = 0; infix[i] != '\0'; i++) {
         if (isdigit(infix[i])) {
-            prefix[k++] = infix[i];
+            while (isdigit(infix[i])) {
+                prefix[k++] = infix[i++];
+            }
+            prefix[k++] = ' ';  // Add space to separate numbers
+            i--;  // To reprocess the non-digit character
         } else if (infix[i] == ')') {
             pushChar(&s, infix[i]);
         } else if (infix[i] == '(') {
             while (!isCharStackEmpty(&s) && peekChar(&s) != ')') {
                 prefix[k++] = popChar(&s);
+                prefix[k++] = ' ';
             }
             popChar(&s);  // Remove ')'
         } else if (isOperator(infix[i])) {
-            while (!isCharStackEmpty(&s) && precedence(peekChar(&s)) > precedence(infix[i])) {
+            while (!isCharStackEmpty(&s) && precedence(peekChar(&s)) >= precedence(infix[i])) {
                 prefix[k++] = popChar(&s);
+                prefix[k++] = ' ';
             }
             pushChar(&s, infix[i]);
         }
     }
     while (!isCharStackEmpty(&s)) {
         prefix[k++] = popChar(&s);
+        prefix[k++] = ' ';
     }
-    prefix[k] = '\0';
+    prefix[k - 1] = '\0';  // Remove the trailing space and add null terminator
     reverse(prefix);
 }
 
@@ -133,13 +140,15 @@ int evaluatePrefix(char* prefix) {
     IntStack s;
     initIntStack(&s);
     reverse(prefix);
-    for (int i = 0; prefix[i] != '\0'; i++) {
-        if (isdigit(prefix[i])) {
-            pushInt(&s, prefix[i] - '0');
-        } else if (isOperator(prefix[i])) {
+
+    char* token = strtok(prefix, " ");
+    while (token != NULL) {
+        if (isdigit(token[0])) {
+            pushInt(&s, atoi(token));
+        } else if (isOperator(token[0])) {
             int val1 = popInt(&s);
             int val2 = popInt(&s);
-            switch (prefix[i]) {
+            switch (token[0]) {
                 case '+':
                     pushInt(&s, val1 + val2);
                     break;
@@ -154,6 +163,7 @@ int evaluatePrefix(char* prefix) {
                     break;
             }
         }
+        token = strtok(NULL, " ");
     }
     return popInt(&s);
 }
@@ -164,7 +174,7 @@ int main() {
 
     // Get the infix expression from the user
     printf("Enter infix expression: ");
-    scanf("%s", infix);
+    scanf("%[^\n]%*c", infix);
 
     // Convert infix to prefix
     infixToPrefix(infix, prefix);
